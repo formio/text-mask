@@ -1,9 +1,14 @@
 import createTextMaskInputElement from '../../core/src/createTextMaskInputElement'
 
 export function maskInput(textMaskConfig) {
-  const {inputElement} = textMaskConfig
+  const {inputElement, afterUpdate} = textMaskConfig
   const textMaskInputElement = createTextMaskInputElement(textMaskConfig)
-  const inputHandler = ({target: {value}}) => textMaskInputElement.update(value)
+  const inputHandler = ({target: {value}}) => {
+    textMaskInputElement.update(value)
+    if (typeof afterUpdate === 'function') {
+      afterUpdate(value)
+    }
+  }
 
   inputElement.addEventListener('input', inputHandler)
 
