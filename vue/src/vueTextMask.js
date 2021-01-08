@@ -7,13 +7,16 @@ export default {
       domProps: {
         value: this.value
       },
-      on: {
-        input: (event) => this.updateValue(event.target.value)
-      }
+      attrs: this.$attrs,
+      on: Object.assign({...this.$listeners}, {
+        input: (event) => this.updateValue(event.target.value),
+      })
     })
   },
 
   name: 'masked-input',
+
+  inheritAttrs: false,
 
   props: {
     value: {
@@ -54,31 +57,39 @@ export default {
   },
 
   mounted() {
-    this.bind()
+    this.initMask()
   },
 
   methods: {
     createTextMaskInputElement,
 
-    bind() {
+    setTextMaskInputElement() {
       this.textMaskInputElement = this.createTextMaskInputElement({
         inputElement: this.$refs.input,
         ...this.$options.propsData
       })
+    },
 
+    initMask() {
+      this.setTextMaskInputElement()
+      this.textMaskInputElement.update(this.value)
+    },
+
+    bind() {
+      this.setTextMaskInputElement()
       this.updateValue(this.value)
     },
 
     updateValue(value) {
       this.textMaskInputElement.update(value)
       this.$emit('input', this.$refs.input.value)
-    }
+    },
   },
 
   watch: {
-    mask(newMask) {
+    mask(newMask, oldMask) {
       // Check if the mask has changed (Vue cannot detect whether an array has changed)
-      if (this.mask !== newMask) {
+      if (this.mask !== oldMask) {
         this.bind()
       }
     },

@@ -1,9 +1,8 @@
 import adjustCaretPosition from './adjustCaretPosition'
 import conformToMask from './conformToMask'
 import {convertMaskToPlaceholder, isString, isNumber, processCaretTraps} from './utilities'
-import {placeholderChar as defaultPlaceholderChar} from './constants'
+import {placeholderChar as defaultPlaceholderChar, strFunction} from './constants'
 
-const strFunction = 'function'
 const emptyString = ''
 const strNone = 'none'
 const strObject = 'object'
@@ -68,8 +67,8 @@ export default function createTextMaskInputElement(config) {
       // If it's something we can't work with `getSafeRawValue` will throw.
       const safeRawValue = getSafeRawValue(rawValue)
 
-      // `selectionStart` indicates to us where the caret position is after the user has typed into the input
-      const {selectionStart: currentCaretPosition} = inputElement
+      // `selectionEnd` indicates to us where the caret position is after the user has typed into the input
+      const {selectionEnd: currentCaretPosition} = inputElement
 
       // We need to know what the `previousConformedValue` and `previousPlaceholder` is from the previous `update` call
       const {previousConformedValue, previousPlaceholder} = state
