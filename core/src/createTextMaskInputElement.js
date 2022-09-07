@@ -167,7 +167,12 @@ export default function createTextMaskInputElement(config) {
         return
       }
 
-      inputElement.value = inputElementValue // set the input value
+      if (safeRawValue.includes('e-')) {
+        inputElement.value = safeRawValue;
+      }
+      else {
+        inputElement.value = inputElementValue // set the input value
+      }
       safeSetSelection(inputElement, adjustedCaretPosition, config.shadowRoot) // adjust caret position
     }
   }
