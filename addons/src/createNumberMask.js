@@ -20,7 +20,8 @@ export default function createNumberMask({
   requireDecimal = false,
   allowNegative = false,
   allowLeadingZeroes = false,
-  integerLimit = null
+  integerLimit = null,
+  allowScientificNotation = false,
 } = {}) {
   const prefixLength = prefix && prefix.length || 0
   const suffixLength = suffix && suffix.length || 0
@@ -124,6 +125,18 @@ export default function createNumberMask({
 
     if (suffix.length > 0) {
       mask = mask.concat(suffix.split(emptyString))
+    }
+
+    if (allowScientificNotation && /[eE]/.test(rawValue)) {
+      const [base, exponent] = rawValue.split(/[eE]/)
+      const baseMatch = base.match(/^[-+]?[0-9]*\.?[0-9]+/)
+      const exponentMatch = exponent && exponent.match(/^[-+]?[0-9]+$/)
+
+      if (baseMatch && (!exponent || exponentMatch)) {
+        const baseMask = numberMask(baseMatch[0])
+        const exponentMask = exponentMatch ? convertToMask(exponentMatch[0]) : []
+        return [...baseMask, 'e', ...exponentMask]
+      }
     }
 
     return mask
