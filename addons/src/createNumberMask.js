@@ -21,7 +21,7 @@ export default function createNumberMask({
   allowNegative = false,
   allowLeadingZeroes = false,
   integerLimit = null,
-  allowScientificNotation = false,
+  allowScientificNotation = true,
 } = {}) {
   const prefixLength = prefix && prefix.length || 0
   const suffixLength = suffix && suffix.length || 0
